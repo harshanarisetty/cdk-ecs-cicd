@@ -1,17 +1,19 @@
-FROM python:3.5-slim
+FROM node:8
 
-MAINTAINER fernando@linuxacademy.com
+# Create app directory
+WORKDIR /usr/src/app
 
-USER root
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-WORKDIR /app
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-ADD . /app
-
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Bundle app source
+COPY . .
 
 EXPOSE 3000
-
-ENV NAME World
-
-CMD ["python", "app.py"]
+CMD [ "npm", "start" ]

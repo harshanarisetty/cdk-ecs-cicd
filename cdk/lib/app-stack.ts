@@ -9,7 +9,6 @@ export interface AppStackProps extends cdk.StackProps {
     vpc: ec2.Vpc;
     cluster: ecs.Cluster;
     appImage?: ecs.ContainerImage;
-    nginxImage?: ecs.ContainerImage;
 }
 
 export class AppStack extends cdk.Stack {
@@ -36,17 +35,6 @@ export class AppStack extends cdk.Stack {
             logging: appLogging
         });
         appContainer.addPortMappings({ containerPort: 3000 });
-
-        // Add nginx container 
-        const nginxLogging = new ecs.AwsLogDriver({
-            streamPrefix: "nginx",
-        });
-        const nginxImage = props.nginxImage || new ecs.AssetImage(path.join(__dirname, '../..', 'nginx'));
-        const nginxContainer = taskDefinition.addContainer("nginx", {
-            image: nginxImage,
-            logging: nginxLogging
-        });
-        nginxContainer.addPortMappings({ containerPort: 80 });
 
         // Instantiate Fargate Service with cluster and images
         const service = new ecs.FargateService(this, 'Service', {

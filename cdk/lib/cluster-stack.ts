@@ -3,8 +3,8 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 
 export interface ClusterStackProps extends cdk.StackProps {
-    cidr: string;
     maxAZs: number;
+    natGateways: number;
 }
 
 export class ClusterStack extends cdk.Stack {
@@ -16,7 +16,7 @@ export class ClusterStack extends cdk.Stack {
 
         this.vpc = new ec2.Vpc(this, 'Vpc', { 
             maxAzs: props.maxAZs,
-            cidr: props.cidr
+            natGateways: props.natGateways,
         })
 
         this.cluster = new ecs.Cluster(this, 'FargateCluster', {

@@ -10,7 +10,6 @@ import { githubOwner, repoName, awsSecretsGitHubTokenName, gitProdBranch, ssmIma
 
 export interface StagingProdPipelineStackProps extends cdk.StackProps {
     appRepository: ecr.Repository;
-    nginxRepository: ecr.Repository;
     imageTag: string;
 }
 
@@ -18,10 +17,7 @@ export class StagingProdPipelineStack extends cdk.Stack {
     public readonly appRepository: ecr.Repository;
     public readonly appBuiltImageStaging: PipelineContainerImage;
     public readonly appBuiltImageProd: PipelineContainerImage;
-  
-    public readonly nginxRepository: ecr.Repository;
-    public readonly nginxBuiltImageStaging: PipelineContainerImage;
-    public readonly nginxBuiltImageProd: PipelineContainerImage;
+
   
     constructor(scope: cdk.Construct, id: string, props: StagingProdPipelineStackProps) {
         super(scope, id, {
@@ -32,10 +28,6 @@ export class StagingProdPipelineStack extends cdk.Stack {
         this.appRepository = props.appRepository;
         this.appBuiltImageStaging = new PipelineContainerImage(this.appRepository);
         this.appBuiltImageProd = new PipelineContainerImage(this.appRepository);
-    
-        this.nginxRepository = props.nginxRepository;
-        this.nginxBuiltImageStaging = new PipelineContainerImage(this.nginxRepository);
-        this.nginxBuiltImageProd = new PipelineContainerImage(this.nginxRepository);
     
         const sourceOutput = new codepipeline.Artifact();
         
@@ -129,7 +121,6 @@ export class StagingProdPipelineStack extends cdk.Stack {
                     runOrder: 1,
                     parameterOverrides: {
                         [this.appBuiltImageStaging.paramName]: cdkBuildOutput.getParam('imageTag.json', 'imageTag'),
-                        [this.nginxBuiltImageStaging.paramName]: cdkBuildOutput.getParam('imageTag.json', 'imageTag'),
                       },
                       extraInputs: [cdkBuildOutput],
                     }),
@@ -152,7 +143,6 @@ export class StagingProdPipelineStack extends cdk.Stack {
                     adminPermissions: true,
                     parameterOverrides: {
                         [this.appBuiltImageProd.paramName]: cdkBuildOutput.getParam('imageTag.json', 'imageTag'),
-                        [this.nginxBuiltImageProd.paramName]: cdkBuildOutput.getParam('imageTag.json', 'imageTag'),
                       },
                       extraInputs: [cdkBuildOutput],
                     }),
