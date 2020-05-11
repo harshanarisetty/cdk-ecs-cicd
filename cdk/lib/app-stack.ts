@@ -70,12 +70,13 @@ export class AppStack extends cdk.Stack {
             internetFacing: true
         });
 
-        const listener = lb.addListener('HttpListener', {
-            port: 80
+        const listener = lb.addListener('HttpsListener', {
+            port: 443,
+            certificateArns: ['arn:aws:acm:us-east-1:232390466120:certificate/15e1f10c-53d5-47d5-ac3e-f852ed345538']
         });
 
         listener.addTargets('DefaultTarget', {
-            port: 80,
+            port: 443,
             protocol: elbv2.ApplicationProtocol.HTTP,
             targets: [service]
         });
