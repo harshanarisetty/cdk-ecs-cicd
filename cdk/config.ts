@@ -1,4 +1,4 @@
-export const githubOwner = 'HarshaNarisetty';
+export const githubOwner = 'harshanarisetty';
 export const repoName = 'cdk-ecs-cicd';
 export const gitDevBranch = 'dev'
 export const gitProdBranch = 'master'
