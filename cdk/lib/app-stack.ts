@@ -76,7 +76,7 @@ export class AppStack extends cdk.Stack {
         });
 
         listener.addTargets('DefaultTarget', {
-            port: 443,
+            port: 80,
             protocol: elbv2.ApplicationProtocol.HTTP,
             targets: [service]
         });
